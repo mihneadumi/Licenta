@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "licenta"
+version = "0.1.0"
+description = "Project for bachelor thesis"
+authors = ["912-Dumitrana-Mihnea <mihnea.dumitrana@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pynvml = "^12.0.0"
+cupy-cuda12x = "^13.3.0"
+py-cpuinfo = "^9.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
