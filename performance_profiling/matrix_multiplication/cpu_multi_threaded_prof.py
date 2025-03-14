@@ -2,9 +2,14 @@ import os
 import time
 import numpy as np
 
-from algorithms.matrix_multiplication.multi_thread import multi_threaded_multiply  # Assuming the multi-threaded function is in this module
+from algorithms.matrix_multiplication.multi_thread import multi_threaded_multiply
 from performance_profiling.get_system_info import get_cpu_info, get_gpu_info
 
+def generate_matrices(size):
+    """Generates fresh matrices for each run."""
+    A = np.random.rand(size, size)
+    B = np.random.rand(size, size)
+    return A, B
 
 def profile_cpu_multi(A, B):
     """Profiles multi-threaded CPU matrix multiplication."""
@@ -12,13 +17,8 @@ def profile_cpu_multi(A, B):
     multi_threaded_multiply(A, B)
     return time.time() - start_cpu
 
-def save_cpu_multi_stats(matrix_file, runs):
+def save_cpu_multi_stats(size, runs):
     print("Info: Profiling multi-threaded CPU matrix multiplication.")
-
-    # Load matrices from file
-    matrices = np.load(matrix_file)
-    A, B = matrices["A"], matrices["B"]
-    size = A.shape[0]
 
     # Define output file path
     output_dir = f'results/matrix_multiplication/{size}'
@@ -33,15 +33,15 @@ def save_cpu_multi_stats(matrix_file, runs):
 
         # Profile and save results
         for run_number in range(1, runs + 1):
+            A, B = generate_matrices(size)  # Generate new matrices for each run
             cpu_multiply_time = profile_cpu_multi(A, B)
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
             result = f"{run_number}, {timestamp}, {cpu_multiply_time:.3f}\n"
             file.write(result)
             print(f"Info: Run {run_number}: {cpu_multiply_time:.3f} seconds")
 
-def run_matrix_mult_cpu_multi_threaded_prof(runs=10):
-    matrix_file = "performance_profiling/matrix_multiplication/pre_generated_matrices.npz"
-    save_cpu_multi_stats(matrix_file, runs)
+def run_matrix_mult_cpu_multi_threaded_prof(runs=10, size=1000):
+    save_cpu_multi_stats(size, runs)
 
 if __name__ == "__main__":
     run_matrix_mult_cpu_multi_threaded_prof()
