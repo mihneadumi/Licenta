@@ -3,7 +3,7 @@ import time
 
 from algorithms.matrix_multiplication.multi_thread import multi_threaded_multiply
 from constants.string_constants import RESULTS_BASE_PATH, MATRIX_MULTIPLICATION_PATH, DATE_FORMAT
-from performance_profiling.utils import get_cpu_info, get_gpu_info, generate_matrices, write_result_header
+from utils.utils import generate_matrices, write_result_header
 
 
 def profile_cpu_multi(A, B):

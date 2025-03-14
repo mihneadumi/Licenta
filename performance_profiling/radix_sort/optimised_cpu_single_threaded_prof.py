@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 from algorithms.radix_sort.optimised_radix_sort import radix_sort
-from performance_profiling.utils import get_cpu_info, get_gpu_info, write_result_header
+from utils.utils import write_result_header
 
 
 def generate_arrays(size, num_arrays):

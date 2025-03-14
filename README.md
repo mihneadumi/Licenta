@@ -13,6 +13,9 @@ If not, you can manually set the interpreter to the one created by poetry.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`poetry env info` or `poetry config virtualenvs.path` in the root directory of the repository.
 
 ## Running the code
+
+**NOTE:** Before running the program make sure you have at least 2GB of free space on your disk.  
+
 To run the code, you can use the following command:
 
     `poetry run python main.py`

@@ -4,7 +4,7 @@ import numpy as np
 
 from algorithms.matrix_multiplication.single_thread import single_threaded_multiply
 from constants.string_constants import RESULTS_BASE_PATH, MATRIX_MULTIPLICATION_PATH, DATE_FORMAT
-from performance_profiling.utils import get_cpu_info, get_gpu_info, write_result_header
+from utils.utils import write_result_header
 
 
 def generate_matrices(size):
@@ -28,7 +28,7 @@ def save_cpu_single_stats(size, runs):
     file_path = f'{output_dir}/cpu_single_thread_stats.txt'
 
     with open(file_path, 'w') as file:
-        write_result_header()
+        write_result_header(file)
 
         # Profile and save results
         for run_number in range(1, runs + 1):

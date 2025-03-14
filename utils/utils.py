@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from pynvml import nvmlInit, nvmlDeviceGetHandleByIndex, nvmlDeviceGetName
 import cpuinfo
@@ -30,3 +32,8 @@ def generate_matrices(size):
     A = np.random.rand(size, size)
     B = np.random.rand(size, size)
     return A, B
+
+def get_formatted_elapsed_time(start_time):
+    elapsed_time = time.time() - start_time
+    formatted_time = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
+    return formatted_time

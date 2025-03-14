@@ -3,7 +3,7 @@ import time
 import numpy as np
 from algorithms.matrix_multiplication.gpu_acceleration import gpu_multiply
 from constants.string_constants import RESULTS_BASE_PATH, MATRIX_MULTIPLICATION_PATH, DATE_FORMAT
-from performance_profiling.utils import get_gpu_info, get_cpu_info, write_result_header
+from utils.utils import write_result_header
 
 
 def generate_matrices(size):
