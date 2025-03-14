@@ -2,7 +2,9 @@ import os
 import time
 import numpy as np
 from algorithms.matrix_multiplication.gpu_acceleration import gpu_multiply
-from performance_profiling.get_system_info import get_gpu_info, get_cpu_info
+from constants.string_constants import RESULTS_BASE_PATH, MATRIX_MULTIPLICATION_PATH, DATE_FORMAT
+from performance_profiling.utils import get_gpu_info, get_cpu_info, write_result_header
+
 
 def generate_matrices(size):
     """Generates fresh matrices for each run."""
@@ -20,21 +22,19 @@ def save_gpu_stats(size, runs):
     print("Info: Profiling GPU matrix multiplication.")
 
     # Define output file path
-    output_dir = f'results/matrix_multiplication/{size}'
+    output_dir = f'{RESULTS_BASE_PATH}{MATRIX_MULTIPLICATION_PATH}{size}'
     os.makedirs(output_dir, exist_ok=True)
     file_path = f'{output_dir}/gpu_acceleration_stats.txt'
 
     # Write header
     with open(file_path, 'w') as file:
-        file.write(f"# CPU Info: {get_cpu_info()}\n")
-        file.write(f"# GPU Info: {get_gpu_info()}\n")
-        file.write("# Run Number, Timestamp, Time (s)\n")
+        write_result_header(file)
 
         # Profile and save results
         for run_number in range(1, runs + 1):
             A, B = generate_matrices(size)  # Generate new matrices for each run
             gpu_multiply_time = profile_gpu(A, B)
-            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = time.strftime(DATE_FORMAT)
             result = f"{run_number}, {timestamp}, {gpu_multiply_time:.3f}\n"
             file.write(result)
             print(f"Info: Run {run_number}: {gpu_multiply_time:.3f} seconds")

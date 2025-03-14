@@ -3,7 +3,8 @@ import time
 import numpy as np
 
 from algorithms.radix_sort.single_threaded import radix_sort
-from performance_profiling.get_system_info import get_cpu_info, get_gpu_info
+from performance_profiling.utils import get_cpu_info, get_gpu_info, write_result_header
+
 
 def generate_arrays(size, num_arrays):
     """Generates fresh random arrays for each run."""
@@ -23,9 +24,7 @@ def save_radix_sort_stats(size, runs):
     file_path = f'{output_dir}/cpu_single_thread_stats.txt'
 
     with open(file_path, 'w') as file:
-        file.write(f"# CPU Info: {get_cpu_info()}\n")
-        file.write(f"# GPU Info: {get_gpu_info()}\n")
-        file.write("# Run Number, Timestamp, Time (s)\n")
+        write_result_header(file)
 
         for run_number in range(1, runs + 1):
             arr = np.random.randint(0, 10**6, size, dtype=np.int32)  # Generate fresh array each run

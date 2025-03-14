@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def counting_sort(arr, exp, byte_check, buckets):
+def counting_sort(arr, exp, byte_check):
     """Performs counting sort based on a specific byte (exp)."""
     n = len(arr)
 
@@ -38,7 +38,7 @@ def radix_sort(arr):
 
     # Perform counting sort on each byte (LSB to MSB)
     for offset in range(highest_byte):
-        counting_sort(arr, exp, byte_check, [])
+        counting_sort(arr, exp, byte_check)
         byte_check <<= 8  # Move the mask to the next byte
         exp += 8
 
