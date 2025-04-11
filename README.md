@@ -1,10 +1,11 @@
 # Source Code for Bachelor Thesis Dumitrana Mihnea
 
 ## Setup Instructions
-    1. Install Python 3.9+
-    2. install poetry package manager from https://python-poetry.org/docs/#installing-with-the-official-installer 
-    3. Clone the repository
-    4. Run `poetry install` in the root directory of the repository
+1. Install Python 3.9+
+2. Install [CUDA Toolkit 12.6+](https://developer.nvidia.com/cuda-downloads)
+3. Install [Poetry package manager](https://python-poetry.org/docs/#installing-with-the-official-installer)
+4. Clone the repository
+5. Run `poetry install` in the root directory of the repository
 
 If using PyCharm, the IDE should prompt you to set the interpreter to the one created by poetry.  
 If not, you can manually set the interpreter to the one created by poetry.
