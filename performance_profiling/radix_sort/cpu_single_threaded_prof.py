@@ -35,7 +35,7 @@ def save_radix_sort_stats(size, runs):
             mb_per_min = mb_sorted / (sort_time / 60)
 
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-            result = f"{run_number}, {timestamp}, {sort_time:.3f}, {mb_per_min:.2f}\n"
+            result = f"{run_number}, {timestamp}, {sort_time:.3f} MB, {mb_per_min:.2f} MB/min\n"
             file.write(result)
             print(f"Info: Run {run_number}: {sort_time:.3f} s,{mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min")
 
