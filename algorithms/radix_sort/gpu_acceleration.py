@@ -1,39 +1,34 @@
+import numpy as np
 import cupy as cp
+from ctypes import cdll, c_uint32, POINTER, c_int
 
-def counting_sort_gpu(arr, exp):
-    """GPU-based counting sort for a specific digit (exp)."""
-    n = arr.size
-    output = cp.zeros_like(arr)
-    count = cp.zeros(10, dtype=cp.int32)
+lib = cdll.LoadLibrary("./libradixsort.dll")
 
-    indices = (arr // exp) % 10
-    count = cp.bincount(indices, minlength=10)
-
-    count = cp.cumsum(count)
-
-    for i in range(n - 1, -1, -1):
-        index = (arr[i] // exp) % 10
-        output[count[index] - 1] = arr[i]
-        count[index] -= 1
-
-    return output
+lib.radix_sort.argtypes = [POINTER(c_uint32), POINTER(c_uint32), c_int]
+lib.radix_sort.restype = None
 
 def radix_sort_gpu(arr):
-    """Performs GPU-accelerated Radix Sort using CuPy."""
-    arr_gpu = cp.array(arr)  # Move array to GPU
-    max_num = cp.max(arr_gpu)
-    exp = 1
+    """Calls the GPU-accelerated radix sort from the DLL."""
+    arr_cpu = arr.get()
+    arr_cpu = arr_cpu.astype(np.uint32)
+    
+    output_cpu = np.zeros_like(arr_cpu, dtype=np.uint32)
+    
+    input_ptr = arr_cpu.ctypes.data_as(POINTER(c_uint32))
+    output_ptr = output_cpu.ctypes.data_as(POINTER(c_uint32))
 
-    while max_num // exp > 0:
-        arr_gpu = counting_sort_gpu(arr_gpu, exp)
-        exp *= 10
+    lib.radix_sort(input_ptr, output_ptr, arr_cpu.size)
 
-    return cp.asnumpy(arr_gpu)  # Move back to CPU
+    return cp.array(output_cpu)  # Convert back to CuPy array
 
-# test
+# Test the radix_sort_gpu function
 if __name__ == "__main__":
-    arr = cp.random.randint(1, 100000, 10000)
-    print(arr)
+    # Generate a random array with integers
+    arr = cp.random.randint(1, 100000, 10000, dtype=cp.uint32)
+    print("Original array:", arr)
+    
+    # Sort using the GPU-accelerated radix sort from the DLL
     sorted_arr = radix_sort_gpu(arr)
-    print(sorted_arr)
+    
+    print("Sorted array:", sorted_arr)
     print("GPU-accelerated radix sort complete.")
