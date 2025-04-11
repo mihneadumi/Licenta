@@ -3,6 +3,7 @@ import time
 import numpy as np
 from pynvml import nvmlInit, nvmlDeviceGetHandleByIndex, nvmlDeviceGetName
 import cpuinfo
+import psutil
 
 def get_cpu_info():
     """Returns CPU info using py-cpuinfo."""
@@ -21,6 +22,14 @@ def get_gpu_info():
         return gpu_name
     except Exception as e:
         return "No CUDA enabled GPU found."
+
+def get_ram_info():
+    """Returns RAM info using psutil."""
+    try:
+        ram = psutil.virtual_memory()
+        return f"Total: {ram.total / (1024 ** 3):.2f} GB, Available: {ram.available / (1024 ** 3):.2f} GB"
+    except ImportError:
+        return "psutil not installed. Cannot retrieve RAM info."
 
 def write_result_header(file):
     file.write(f"# CPU Info: {get_cpu_info()}\n")
