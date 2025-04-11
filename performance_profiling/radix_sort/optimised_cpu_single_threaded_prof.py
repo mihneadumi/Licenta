@@ -11,7 +11,7 @@ def generate_arrays(size, num_arrays):
     return [np.random.randint(0, 10**6, size, dtype=np.int32) for _ in range(num_arrays)]
 
 def profile_radix_sort(arr):
-    """Profiles single-threaded Radix Sort."""
+    """Profiles single-threaded Optimised Radix Sort."""
     start = time.time()
     radix_sort(arr)
     return time.time() - start
@@ -24,15 +24,19 @@ def save_radix_sort_stats(size, runs):
     file_path = f'{output_dir}/optimised_cpu_single_thread_stats.txt'
 
     with open(file_path, 'w') as file:
-        write_result_header(file)
+        file.write("Run, Timestamp, Time(s), Data Size, MB/min\n")
 
         for run_number in range(1, runs + 1):
-            arr = np.random.randint(0, 10**6, size, dtype=np.int32)  # Generate fresh array each run
+            arr = np.random.randint(0, 10**6, size, dtype=np.int32)
             sort_time = profile_radix_sort(arr)
+
+            mb_sorted = arr.nbytes / (1024 ** 2)
+            mb_per_min = mb_sorted / (sort_time / 60)
+
             timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-            result = f"{run_number}, {timestamp}, {sort_time:.3f}\n"
+            result = f"{run_number}, {timestamp}, {sort_time:.3f}, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min\n"
             file.write(result)
-            print(f"Info: Run {run_number}: {sort_time:.3f} seconds")
+            print(f"Info: Run {run_number}: {sort_time:.3f} s, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min")
 
 def run_optimised_radix_sort_single_threaded_prof(runs=10, size=100000):
     save_radix_sort_stats(size, runs)

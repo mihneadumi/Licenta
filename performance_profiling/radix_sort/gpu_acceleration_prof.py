@@ -7,6 +7,7 @@ from algorithms.radix_sort.gpu_acceleration import radix_sort_gpu
 from constants.string_constants import RESULTS_BASE_PATH, RADIX_SORT_PATH, DATE_FORMAT
 from utils.utils import write_result_header
 
+
 def generate_arrays(size, num_arrays):
     """Generates fresh random arrays for each run."""
     return [np.random.randint(0, 10**6, size, dtype=np.int32) for _ in range(num_arrays)]
@@ -26,15 +27,20 @@ def save_radix_sort_gpu_stats(size, runs):
     file_path = f'{output_dir}/gpu_acceleration_stats.txt'
 
     with open(file_path, 'w') as file:
-        write_result_header(file)
+        file.write("Run, Timestamp, Time(s), Data Size, MB/min\n")
 
         for run_number in range(1, runs + 1):
             arr = np.random.randint(0, 10**6, size, dtype=np.int32)
             sort_time = profile_radix_sort_gpu(arr)
+
+            # Calculate MB/min
+            mb_sorted = arr.nbytes / (1024 ** 2)  # Convert bytes to MB
+            mb_per_min = mb_sorted / (sort_time / 60)
+
             timestamp = time.strftime(DATE_FORMAT)
-            result = f"{run_number}, {timestamp}, {sort_time:.3f}\n"
+            result = f"{run_number}, {timestamp}, {sort_time:.3f}, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min\n"
             file.write(result)
-            print(f"Info: Run {run_number}: {sort_time:.3f} seconds")
+            print(f"Info: Run {run_number}: {sort_time:.3f} s, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min")
 
 def run_radix_sort_gpu_acceleration_prof(runs=10, size=100000):
     save_radix_sort_gpu_stats(size, runs)

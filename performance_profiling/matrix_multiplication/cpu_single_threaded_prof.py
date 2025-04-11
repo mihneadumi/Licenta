@@ -28,16 +28,22 @@ def save_cpu_single_stats(size, runs):
     file_path = f'{output_dir}/cpu_single_thread_stats.txt'
 
     with open(file_path, 'w') as file:
-        write_result_header(file)
+        file.write("Run, Timestamp, Time(s), Data Size, MB/min\n")
 
         # Profile and save results
         for run_number in range(1, runs + 1):
             A, B = generate_matrices(size)  # Generate new matrices for each run
             cpu_multiply_time = profile_cpu_single(A, B)
+
+            # Calculate data size in MB
+            data_size = A.nbytes + B.nbytes  # Total data size (A and B matrices)
+            mb_sorted = data_size / (1024 ** 2)  # Convert bytes to MB
+            mb_per_min = mb_sorted / (cpu_multiply_time / 60)
+
             timestamp = time.strftime(DATE_FORMAT)
-            result = f"{run_number}, {timestamp}, {cpu_multiply_time:.3f}\n"
+            result = f"{run_number}, {timestamp}, {cpu_multiply_time:.3f}, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min\n"
             file.write(result)
-            print(f"Info: Run {run_number}: {cpu_multiply_time:.3f} seconds")
+            print(f"Info: Run {run_number}: {cpu_multiply_time:.3f} s, {mb_sorted:.2f} MB, {mb_per_min:.2f} MB/min")
 
 def run_matrix_mult_cpu_single_threaded_prof(runs=10, size=1000):
     save_cpu_single_stats(size, runs)
