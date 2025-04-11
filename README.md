@@ -1,7 +1,7 @@
 # Source Code for Bachelor Thesis Dumitrana Mihnea
 
 ## Setup Instructions
-1. Install Python 3.9+
+1. Install Python 3.10+
 2. Install [CUDA Toolkit 12.6+](https://developer.nvidia.com/cuda-downloads)
 3. Install [Poetry package manager](https://python-poetry.org/docs/#installing-with-the-official-installer)
 4. Clone the repository
