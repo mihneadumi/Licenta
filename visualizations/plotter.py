@@ -36,7 +36,7 @@ def generate_plots(df, size, algorithm):
     plt.xlabel('Run Number')
     plt.ylabel('Data Throughput (MB/min)')
     plt.title(f'Data Throughput per Run for {algorithm} (Size: {size})')
-    plt.ylim(df['MB/min'].min() - 10, df['MB/min'].max() + 10)
+    plt.ylim(df['MB/min'].min()*0.98, df['MB/min'].max()*1.02)
 
     average_value = df['MB/min'].mean()
     plt.axhline(average_value, color='b', linestyle='--', label=f'Average: {average_value:.2f} MB/min')
