@@ -49,7 +49,11 @@ if __name__ == "__main__":
     run_radix_sort_suite(SMALL_ARRAY_LENGTH)
 
     print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    print("Running MID Radix Sort tests...")
+    print("Running SMALL Radix Sort tests...")
+    run_radix_sort_suite(MID_ARRAY_LENGTH)
+
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running BIG Radix Sort tests...")
     run_radix_sort_suite(BIG_ARRAY_LENGTH, runs=RUNS//2)
 
     print("Total benchmarking time: ", get_formatted_elapsed_time(startTime))
