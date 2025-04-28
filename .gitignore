@@ -1,0 +1,25 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# IDE specific folders
+.idea/
+.vscode/
+# .vsconde/ was likely a typo for .vscode/, but add if needed
+
+# Build artifacts (add others specific to your C++ build if any)
+*.lib
+*.exp
+*.so
+*.o
+
+# Results / Output folders (adjust names if needed)
+results/
+visualizations/plots/
+visualizations/results/
+performance_profiling/**/results/
+
+# Archives (if generated, not source)
+*.rar
+
+# Add other generated files/folders specific to your project
