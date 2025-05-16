@@ -8,7 +8,6 @@
 // --- Thrust Includes ---
 #include <thrust/device_ptr.h>
 #include <thrust/scan.h>
-// No longer need thrust::reduce
 #include <thrust/execution_policy.h> // For thrust::device
 
 #define DLL_EXPORT __declspec(dllexport)
@@ -138,7 +137,7 @@ __global__ void radix_shuffle_byte(uint32_t* d_current_out,           // Output:
                                    const uint32_t* d_local_offsets,   // Input: Local offset within the bucket group
                                    const uint32_t* d_scanned_counts,  // Input: Global scanned counts (offsets) [B0D0..B0D255, B1D0..B1D255, ...]
                                    unsigned int shift,                // Current bit shift
-                                   unsigned int n)                     // Total number of elements
+                                   unsigned int n)                    // Total number of elements
 {
     unsigned int thid = threadIdx.x;
     unsigned int block_id = blockIdx.x;
@@ -149,11 +148,11 @@ __global__ void radix_shuffle_byte(uint32_t* d_current_out,           // Output:
     if (gidx < n) {
         uint32_t value = d_temp_values[gidx];
         uint32_t local_offset = d_local_offsets[gidx];
-        // Determine the 8-bit bucket index again
+        // determine the 8-bit bucket index again
         uint32_t bucket_idx = (value >> shift) & (NUM_BUCKETS - 1); // Mask is 0xFF
 
-        // Read the global starting offset for this block and this bucket
-        // Index into scanned counts: block_id * NUM_BUCKETS + bucket_idx
+        // read the global starting offset for this block and this bucket
+        // index into scanned counts: block_id * NUM_BUCKETS + bucket_idx
         unsigned int count_idx = block_id * NUM_BUCKETS + bucket_idx;
         unsigned int global_offset_start = 0;
         unsigned int counts_len = grid_dim * NUM_BUCKETS;
@@ -165,14 +164,14 @@ __global__ void radix_shuffle_byte(uint32_t* d_current_out,           // Output:
              return;
          }
 
-        // Calculate final destination position: Global start offset + Local offset within group
+        // calculate final destination position: Global start offset + Local offset within group
         unsigned int final_pos = global_offset_start + local_offset;
 
         // Write value to final position (with bounds check)
         if (final_pos < n) {
             d_current_out[final_pos] = value;
         } else {
-            // Error condition
+            // error condition
             // printf("ERROR: Shuffle write OOB! gidx=%u, val=%u, bucket=%u, loc_off=%u, glob_off_idx=%u, glob_off=%u, final_pos=%u, n=%u\n",
             //        gidx, value, bucket_idx, local_offset, count_idx, global_offset_start, final_pos, n);
         }
@@ -194,12 +193,12 @@ extern "C" DLL_EXPORT void radix_sort_byte(uint32_t* d_input, uint32_t* d_output
     // --- Device Memory Allocations ---
     uint32_t* d_temp_values = nullptr;
     uint32_t* d_local_offsets = nullptr;
-    uint32_t* d_block_counts = nullptr;   // Counts per bucket per block (interleaved)
-    uint32_t* d_scanned_counts = nullptr; // Global offsets after scanning block counts
+    uint32_t* d_block_counts = nullptr;   // counts per bucket per block (interleaved)
+    uint32_t* d_scanned_counts = nullptr; // global offsets after scanning block counts
 
     unsigned int block_sz = SORT_BLOCK_SZ;
     unsigned int grid_sz = (n + block_sz - 1) / block_sz;
-    // Size of the block counts array (NUM_BUCKETS entries per block)
+    // size of the block counts array (NUM_BUCKETS entries per block)
     unsigned int counts_len = grid_sz * NUM_BUCKETS; // 256 * grid_sz
 
     // Allocate temporary buffers
@@ -212,10 +211,10 @@ extern "C" DLL_EXPORT void radix_sort_byte(uint32_t* d_input, uint32_t* d_output
     uint32_t* d_current_in = d_input;
     uint32_t* d_current_out = d_output;
     int num_bits_total = sizeof(uint32_t) * 8; // 32 bits
-    // Process 8 bits at a time
+    // process 8 bits at a time
     int num_passes = (num_bits_total + RADIX_BITS - 1) / RADIX_BITS; // 32/8 = 4 passes
 
-    // Loop through each byte, from LSB to MSB
+    // loop through each byte, from LSB to MSB
     for (int pass = 0; pass < num_passes; ++pass) {
         unsigned int shift = pass * RADIX_BITS; // 0, 8, 16, 24
         d_current_in = (pass % 2 == 0) ? d_input : d_output;
@@ -227,7 +226,7 @@ extern "C" DLL_EXPORT void radix_sort_byte(uint32_t* d_input, uint32_t* d_output
         radix_sort_pass_byte<<<grid_sz, block_sz>>>(
             d_temp_values,
             d_local_offsets,
-            d_block_counts,     // Output: Counts per bucket/block
+            d_block_counts,  // Output: Counts per bucket/block
             d_current_in,
             shift,
             n);
@@ -271,7 +270,7 @@ extern "C" DLL_EXPORT void radix_sort_byte(uint32_t* d_input, uint32_t* d_output
     // --- Final Result ---
     // After 4 passes (an even number), the fully sorted result
     // is in the buffer originally pointed to by d_input.
-    // The Python wrapper expects the result in d_input.
+    // The Python code expects the result in d_input.
 
     // --- Cleanup ---
     CHECK_CUDA_API(cudaFree(d_scanned_counts), "Free d_scanned_counts");
