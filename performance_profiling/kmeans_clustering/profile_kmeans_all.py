@@ -234,8 +234,9 @@ def profile_and_save_stats(
 def run_all_kmeans_benchmarks(include_single_thread_for_standard_tests: bool = True):
     """Defines and runs a suite of k-Means benchmarks."""
     benchmark_params = [
-        (100000, 32, 10, 50, 1e-4, 11),  # N_points, D_dims, K_clusters, max_iters, tol, total_runs
+        (100000, 32, 10, 50, 1e-4, 11),
         (1000000, 32, 10, 50, 1e-4, 11),
+        (10000000, 32, 10, 50, 1e-4, 11),
     ]
     try:
         print(f"CPU Info: {platform.processor()}")
