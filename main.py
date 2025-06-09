@@ -4,8 +4,7 @@ import argparse
 
 from constants.params import RUNS, BIG_MATRIX_SIZE, MID_MATRIX_SIZE, SMALL_MATRIX_SIZE, \
     SMALL_ARRAY_LENGTH, MID_ARRAY_LENGTH, BIG_ARRAY_LENGTH
-from performance_profiling.kmeans_clustering.profile_kmeans_all import run_all_kmeans_benchmarks, \
-    profile_and_save_stats as profile_kmeans_specific
+from performance_profiling.kmeans_clustering.profile_kmeans_all import run_all_kmeans_benchmarks
 from performance_profiling.matrix_multiplication.profile_matrix_mult_all import run_matrix_multiplication_benchmark
 from performance_profiling.radix_sort.profile_radix_sort_all import run_radix_sort_benchmark
 from utils.utils import get_cpu_info, get_gpu_info, get_formatted_elapsed_time, get_ram_info
@@ -91,32 +90,32 @@ if __name__ == "__main__":
     print(f"\nInitial System Check Complete. Elapsed time: {get_formatted_elapsed_time(startTime)}")
     print(f"GPU Available for suites (based on detection and flags): {run_gpu_tests_globally}")
 
-    # print("\nRunning SMALL Matrix multiplication tests...")
-    # run_matrix_mult_suite(SMALL_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running MID Matrix multiplication tests...")
-    # run_matrix_mult_suite(MID_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running BIG Matrix multiplication tests...")
-    # run_matrix_mult_suite(BIG_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
-    #
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running SMALL Radix Sort tests...")
-    # run_radix_sort_suite(SMALL_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running MID Radix Sort tests...")
-    # run_radix_sort_suite(MID_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running BIG Radix Sort tests...")
-    # run_radix_sort_suite(BIG_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    print("\nRunning SMALL Matrix multiplication tests...")
+    run_matrix_mult_suite(SMALL_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running MID Matrix multiplication tests...")
+    run_matrix_mult_suite(MID_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running BIG Matrix multiplication tests...")
+    run_matrix_mult_suite(BIG_MATRIX_SIZE, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running SMALL Radix Sort tests...")
+    run_radix_sort_suite(SMALL_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running MID Radix Sort tests...")
+    run_radix_sort_suite(MID_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running BIG Radix Sort tests...")
+    run_radix_sort_suite(BIG_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
 
     print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
     print("Running K-Means Clustering standard tests...")
     run_all_kmeans_benchmarks(include_single_thread_for_standard_tests=True)
 
-    # print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
-    # print("Running Extra Large tests...")
-    # run_extra_large_tests(6, has_gpu_flag=run_gpu_tests_globally)
+    print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
+    print("Running Extra Large tests...")
+    run_extra_large_tests(6, has_gpu_flag=run_gpu_tests_globally)
 
     print(f"\nTotal benchmarking time: {get_formatted_elapsed_time(startTime)}")
     print(

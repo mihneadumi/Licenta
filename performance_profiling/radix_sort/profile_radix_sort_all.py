@@ -78,7 +78,7 @@ def profile_and_save_stats(
             if config_item["run_this_time"]:
                 path = os.path.join(output_dir, config_item["file_suffix"])
                 file_handles[key] = open(path, 'w')
-                file_handles[key].write("Run,Timestamp,Time(s),Size,MElementsPerSec\n")  # Changed ArraySize to Size
+                file_handles[key].write("Run,Timestamp,Time(s),Size,MElements/s\n")  # Changed ArraySize to Size
                 active_implementations_for_run[key] = config_item
 
         if not active_implementations_for_run:
