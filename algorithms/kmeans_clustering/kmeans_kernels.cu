@@ -1,7 +1,7 @@
 #include <cuda_runtime.h>
 #include <float.h> // For FLT_MAX
-#include <stdio.h> // For printf (debugging)
-#include <stdint.h> // For explicit types if needed, though float is primary
+#include <stdio.h>
+#include <stdint.h>
 
 #define DLL_EXPORT __declspec(dllexport)
 
@@ -11,7 +11,6 @@
         cudaError_t err = call; \
         if (err != cudaSuccess) { \
             fprintf(stderr, "CUDA API Error at %s (%s:%d): %s\n", msg, __FILE__, __LINE__, cudaGetErrorString(err)); \
-            /* Consider more robust error handling or returning an error code */ \
             return; \
         } \
     } while (0)
@@ -25,7 +24,6 @@
         err = cudaDeviceSynchronize(); \
         if (err != cudaSuccess) { \
             fprintf(stderr, "CUDA Error after %s kernel sync (%s:%d): %s\n", msg, __FILE__, __LINE__, cudaGetErrorString(err)); \
-            /* Consider more robust error handling */ \
             return; \
         } \
     } while (0)
@@ -67,10 +65,9 @@ __global__ void assign_points_to_centroids_kernel(
 }
 
 // --- Kernel(s) for Updating Centroids ---
-// This is the more complex part. A robust version uses parallel reduction.
-// For a start, we can outline a version using global atomics (can be slow if D is large or K is small).
-// Or, even simpler for now, we can perform this step on the host (Python/CuPy) after getting assignments.
-// Let's define the interface for the DLL to do both steps.
+// Implements centroid recalculation via parallel accumulation using global atomics.
+// This approach is straightforward but can be slower than more advanced parallel
+// reduction techniques, especially for high-dimensional data but it's the best I got.
 
 // Kernel to initialize sums and counts for new centroids
 __global__ void initialize_centroid_accumulators_kernel(
@@ -125,9 +122,6 @@ __global__ void finalize_centroids_kernel(
                 new_centroids[cluster_idx * D + d] = new_centroid_sums[cluster_idx * D + d] / (float)count;
             }
         }
-        // Else: handle empty cluster. For simplicity, if count is 0, new_centroids[cluster_idx]
-        // will remain 0 from initialization or could be set to its old value if passed.
-        // A robust implementation would handle empty clusters (e.g., re-initialize).
     }
 }
 
@@ -150,11 +144,11 @@ extern "C" DLL_EXPORT void kmeans_iteration_gpu(
 
     // --- 2. Update centroids ---
     // This involves:
-    //    a. Initialize/zero out accumulators for sums and counts
-    //    b. Accumulate sums and counts based on new assignments
-    //    c. Finalize new centroids by dividing sums by counts
+    // a. Initialize/zero out accumulators for sums and counts
+    // b. Accumulate sums and counts based on new assignments
+    // c. Finalize new centroids by dividing sums by counts
 
-    dim3 init_finalize_block_dim(256); // Can often use same block size
+    dim3 init_finalize_block_dim(256); // Can use same block size
     dim3 init_finalize_grid_dim((K + init_finalize_block_dim.x - 1) / init_finalize_block_dim.x);
 
     // a. Initialize temporary accumulators

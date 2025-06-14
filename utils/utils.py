@@ -27,7 +27,7 @@ def get_ram_info():
     """Returns RAM info using psutil."""
     try:
         ram = psutil.virtual_memory()
-        return f"Total: {ram.total / (1024 ** 3):.2f} GB, Available: {ram.available / (1024 ** 3):.2f} GB"
+        return f"Total: {ram.total / (1024 ** 3):.2f} GB, Available at Startup: {ram.available / (1024 ** 3):.2f} GB"
     except ImportError:
         return "psutil not installed. Cannot retrieve RAM info."
 

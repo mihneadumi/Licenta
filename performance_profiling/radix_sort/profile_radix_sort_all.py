@@ -134,7 +134,6 @@ def profile_and_save_stats(
                         melements_per_sec = elements_per_sec / 1e6
 
                     timestamp = time.strftime(DATE_FORMAT)
-                    # array_size variable corresponds to the "Size" column
                     result_line = (f"{run_number},{timestamp},{exec_time:.6f},"
                                    f"{array_size},{melements_per_sec:.2f}\n")
                     file_handles[impl_key].write(result_line)

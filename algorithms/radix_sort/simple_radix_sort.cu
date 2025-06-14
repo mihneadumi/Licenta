@@ -1,9 +1,9 @@
 #include <cuda_runtime.h>
-#include <stdio.h>      // For printf, fprintf
-#include <stdint.h>     // For uint32_t
-#include <stdlib.h>     // For malloc/free
-#include <utility>      // For std::swap
-#include <stdexcept>    // For std::exception
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <utility>
+#include <stdexcept>
 
 // --- Thrust Includes ---
 #include <thrust/device_ptr.h>
@@ -13,7 +13,7 @@
 #define DLL_EXPORT __declspec(dllexport)
 
 // --- Configuration ---
-#define SORT_BLOCK_SZ 128   // Threads per block (can be tuned)
+#define SORT_BLOCK_SZ 128   // Threads per block (SM handles >256 threads, but 128 is more efficient for our use case)
 #define RADIX_BITS 8        // Process 8 bits (1 byte) per pass
 #define NUM_BUCKETS (1 << RADIX_BITS) // 2^8 = 256 buckets
 
@@ -87,7 +87,6 @@ __global__ void radix_sort_pass_byte(uint32_t* d_temp_values,        // Output: 
 
     if (is_valid) {
         value = d_current_in[gidx];
-        // Extract byte using mask 0xFF (255)
         bucket_idx = (value >> shift) & (NUM_BUCKETS - 1);
         d_temp_values[gidx] = value; // Store original value for shuffle
 
@@ -268,7 +267,7 @@ extern "C" DLL_EXPORT void radix_sort_byte(uint32_t* d_input, uint32_t* d_output
     } // End passes loop
 
     // --- Final Result ---
-    // After 4 passes (an even number), the fully sorted result
+    // After 4 passes (or any even number), the fully sorted result
     // is in the buffer originally pointed to by d_input.
     // The Python code expects the result in d_input.
 

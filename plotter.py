@@ -532,6 +532,6 @@ def generate_all_plots():
     print("\n--- Script Execution Complete ---")
 
 
-# This allows the script to be run standalone from the command line
+# Run manually
 if __name__ == "__main__":
     generate_all_plots()

@@ -107,7 +107,7 @@ if __name__ == "__main__":
     run_radix_sort_suite(MID_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
     print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
     print("Running BIG Radix Sort tests...")
-    run_radix_sort_suite(BIG_ARRAY_LENGTH, runs=RUNS, has_gpu_flag=run_gpu_tests_globally)
+    run_radix_sort_suite(1_000_000_000, runs=3, has_gpu_flag=run_gpu_tests_globally)
 
     print(f"\nElapsed time: {get_formatted_elapsed_time(startTime)}")
     print("Running K-Means Clustering standard tests...")

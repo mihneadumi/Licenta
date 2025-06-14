@@ -2,7 +2,6 @@ import customtkinter as ctk
 import threading
 import queue
 import os
-from PIL import Image as PILImage
 import traceback
 import shutil
 from PIL import Image
@@ -13,6 +12,8 @@ from performance_profiling.kmeans_clustering.profile_kmeans_all import profile_a
 from performance_profiling.matrix_multiplication.profile_matrix_mult_all import run_matrix_multiplication_benchmark
 from performance_profiling.radix_sort.profile_radix_sort_all import run_radix_sort_benchmark
 from plotter import generate_all_plots
+from utils.utils import get_cpu_info, get_ram_info, get_gpu_info
+
 
 class BenchmarkApp(ctk.CTk):
     def __init__(self):
@@ -106,6 +107,23 @@ class BenchmarkApp(ctk.CTk):
         self.plot_image_label.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.after(100, self.process_log_queue)
+        self.log_system_info()
+
+    def log_system_info(self):
+        self.log_message("--- System Information ---")
+        try:
+            cpu_info = get_cpu_info()
+            ram_info = get_ram_info()
+            gpu_info = get_gpu_info()
+
+            self.log_message(f"CPU: {cpu_info}")
+            self.log_message(f"RAM: {ram_info}")
+            self.log_message(f"GPU: {gpu_info}")
+            self.log_message("--------------------------\n")
+
+        except Exception as e:
+            self.log_message(f"Error gathering system info: {e}")
+            self.log_message("--------------------------\n")
 
     def log_message(self, message):
         self.log_queue.put(message)
@@ -230,7 +248,6 @@ class BenchmarkApp(ctk.CTk):
             self.plot_button.configure(state="normal", text="Generate Plots")
 
     def clear_all_results(self):
-        """Deletes all contents of the results and visualizations directories."""
         if self.is_running:
             self.log_message("Cannot clear results while a benchmark is in progress.")
             return
@@ -240,7 +257,7 @@ class BenchmarkApp(ctk.CTk):
         results_dir = 'results'
         plots_dir = 'visualizations_and_stats'
 
-        blank_image = PILImage.new("RGBA", (1, 1), (255, 255, 255, 0))
+        blank_image = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
         ctk_blank_image = ctk.CTkImage(light_image=blank_image, dark_image=blank_image, size=(1, 1))
 
         self.plot_image_label.configure(image=ctk_blank_image, text="Generated plots will be displayed here.")
@@ -301,7 +318,7 @@ class BenchmarkApp(ctk.CTk):
 
 if __name__ == "__main__":
     ctk.set_appearance_mode("System")
-    ctk.set_default_color_theme("dark-blue")
+    ctk.set_default_color_theme("blue")
 
     app = BenchmarkApp()
     app.mainloop()
